@@ -1,0 +1,41 @@
+*.pydevproject
+.project
+.metadata
+.mymetadata
+classes/
+bin/
+tmp/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.classpath
+.settings/
+.loadpath
+*.MF
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+# IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Maven
+target/
+
+# Else
+*.log
+.springBeans
