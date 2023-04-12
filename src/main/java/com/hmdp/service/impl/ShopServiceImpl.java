@@ -7,6 +7,7 @@ import com.hmdp.dto.Result;
 import com.hmdp.entity.Shop;
 import com.hmdp.mapper.ShopMapper;
 import com.hmdp.service.IShopService;
+import com.hmdp.utils.RedisCacheClient;
 import com.hmdp.utils.RedisData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -36,14 +37,21 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RedisCacheClient redisCacheClient;
 
     public static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(10);
 
     @Override
     public Result queryById(Long id) {
         log.info("ShopServiceImpl queryById param id is {}", id);
-//        Shop shop = queryWithPassThrough(id);
-        Shop shop = queryWithMutex(id);
+        // 利用缓存空值解决缓存穿透问题
+//        Shop shop = redisCacheClient.queryWithPassThrough(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
+        // 互斥锁解决缓存击穿
+//        Shop shop = queryWithMutex(id);
+        // 使用逻辑过期时间解决缓存击穿问题
+//        Shop shop = queryWithLogicalExpire(id);
+        Shop shop = redisCacheClient.queryWithLogicalExpire(CACHE_SHOP_KEY, id, Shop.class, LOCK_SHOP_KEY, 20L, TimeUnit.SECONDS, this::getById);
         if (shop == null) {
             return Result.fail("店铺不存在");
         }
