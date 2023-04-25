@@ -72,6 +72,11 @@
             <artifactId>redisson</artifactId>
             <version>3.5.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.apifan.common</groupId>
+            <artifactId>common-random</artifactId>
+            <version>1.0.19</version>
+        </dependency>
     </dependencies>
 
     <build>
