@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -42,7 +43,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     private RedissonClient redissonClient;
 
     @Override
-    public Result seckillVoucher(Long voucherId) {
+    public Result seckillVoucher(Long voucherId) throws InterruptedException {
         // 1.根据优惠券id查询秒杀优惠券
         SeckillVoucher voucher = seckillVoucherService.getById(voucherId);
         LocalDateTime now = LocalDateTime.now();
@@ -60,9 +61,11 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         }
         // 5.一人一单
         Long userId = UserHolder.getUser().getId();
-//        SimpleRedisLock simpleRedisLock = new SimpleRedisLock("order" + userId, stringRedisTemplate);
+        //SimpleRedisLock simpleRedisLock = new SimpleRedisLock("order" + userId, stringRedisTemplate);
+        //获取锁（可重入），指定锁的key
         RLock lock = redissonClient.getLock("lock:order:" + userId);
-        boolean lockFlag = lock.tryLock();
+        //尝试获取所，参数分别是：获取锁的最大等待时间（期间会重试），锁自动释放时间，时间单位
+        boolean lockFlag = lock.tryLock(1, 10, TimeUnit.SECONDS);
         if (!lockFlag) {
             return Result.fail("不可以重复下单");
         }
@@ -71,6 +74,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             IVoucherOrderService voucherOrderService = (IVoucherOrderService) AopContext.currentProxy();
             return voucherOrderService.orderHandle(voucherId, userId);
         } finally {
+            //释放锁
             lock.unlock();
         }
     }

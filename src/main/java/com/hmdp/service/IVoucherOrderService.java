@@ -21,7 +21,7 @@ public interface IVoucherOrderService extends IService<VoucherOrder> {
      * @author wangdongming
      * @date 2023/04/15
      */
-    Result seckillVoucher(Long voucherId);
+    Result seckillVoucher(Long voucherId) throws InterruptedException;
 
     /**
      * 订单处理
