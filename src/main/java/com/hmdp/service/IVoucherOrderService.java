@@ -25,11 +25,9 @@ public interface IVoucherOrderService extends IService<VoucherOrder> {
 
     /**
      * 订单处理
-     * @param voucherId 优惠券id
-     * @param userId 用户id
-     * @return Result
+     * @param voucherOrder 优惠券订单信息
      * @author wangdongming
      * @date 2023/04/15
      */
-    Result orderHandle(Long voucherId, Long userId);
+    void orderHandle(VoucherOrder voucherOrder);
 }
