@@ -75,4 +75,16 @@ public class BlogController {
         return blogService.queryBlogById(id);
     }
 
+    /**
+     * 根据博客id获取博客信息前5名
+     * @param id 博客id
+     * @return Result 响应结果
+     * @author wangdongming
+     * @date 2023/05/15
+     */
+    @GetMapping("/likes/{id}")
+    public Result queryBlogLikes(@PathVariable("id") Long id) {
+        return blogService.queryBlogLikes(id);
+    }
+
 }
