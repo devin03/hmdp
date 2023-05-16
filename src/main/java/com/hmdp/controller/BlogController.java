@@ -87,4 +87,18 @@ public class BlogController {
         return blogService.queryBlogLikes(id);
     }
 
+    /**
+     * 查询用户的博客信息
+     * @param pageNo 当前页
+     * @param userId 用户id
+     * @return Result
+     * @author wangdongming
+     * @date 2023/05/16
+     */
+    @GetMapping("/of/user")
+    public Result queryBlogByUserId(@RequestParam("pageNo") Integer pageNo, @RequestParam("userId") Long userId) {
+        Page<Blog> page = blogService.query().eq("user_id", userId).page(new Page<>(pageNo, SystemConstants.MAX_PAGE_SIZE));
+        return Result.ok(page.getRecords());
+    }
+
 }
