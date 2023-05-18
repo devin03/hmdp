@@ -10,6 +10,7 @@ import com.hmdp.entity.UserInfo;
 import com.hmdp.service.IUserInfoService;
 import com.hmdp.service.IUserService;
 import com.hmdp.utils.UserHolder;
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -93,6 +94,28 @@ public class UserController {
         }
         UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
         return Result.ok(userDTO);
+    }
+
+    /**
+     * 用户签到
+     * @return Result
+     * @author wangdongming
+     * @date 2023/05/18
+     */
+    @PostMapping("/sign")
+    public Result sign() {
+        return userService.sign();
+    }
+
+    /**
+     * 统计连续签到天数
+     * @return Result
+     * @author wangdongming
+     * @date 2023/05/18
+     */
+    @GetMapping("/sign/count")
+    public Result signCount() {
+        return userService.signCount();
     }
 
 }

@@ -34,4 +34,8 @@ public interface IUserService extends IService<User> {
      * @date 2023/04/08
      */
     Result login(LoginFormDTO loginForm, HttpSession session);
+
+    Result sign();
+
+    Result signCount();
 }
