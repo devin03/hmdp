@@ -29,4 +29,7 @@ public interface IShopService extends IService<Shop> {
      * @date 2023/04/09
      */
     Result updateShopById(Shop shop);
+
+    Result queryShopByType(Integer typeId, Integer current, Double x, Double y);
+
 }
